@@ -1,19 +1,20 @@
 'use client';
 
+import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import { ordersApi } from '@/lib/api';
-import { CheckCircle, Package, ArrowRight, Home } from 'lucide-react';
+import { CheckCircle, Package, Home } from 'lucide-react';
 import { formatPrice } from '@/lib/utils';
 
-export default function OrderSuccessPage() {
+function OrderSuccessContent() {
   const searchParams = useSearchParams();
   const orderId = searchParams.get('orderId');
 
   const { data: order } = useQuery({
     queryKey: ['order', orderId],
-    queryFn: () => ordersApi.getById(orderId!).then((r) => r.data),
+    queryFn: () => ordersApi.getById(orderId!).then((r: any) => r.data),
     enabled: !!orderId,
   });
 
@@ -21,7 +22,6 @@ export default function OrderSuccessPage() {
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md text-center">
         <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-10">
-          {/* Success Icon */}
           <div className="flex items-center justify-center mb-6">
             <div className="relative">
               <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center animate-pulse">
@@ -87,5 +87,13 @@ export default function OrderSuccessPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function OrderSuccessPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-gray-400">Loading order...</div>}>
+      <OrderSuccessContent />
+    </Suspense>
   );
 }

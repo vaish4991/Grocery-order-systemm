@@ -6,22 +6,24 @@ import { ordersApi } from '@/lib/api';
 import { formatPrice, formatDate } from '@/lib/utils';
 import { ArrowLeft, Package, MapPin, CreditCard, XCircle } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 
 const STATUS_STEPS = ['PENDING', 'CONFIRMED', 'PROCESSING', 'SHIPPED', 'DELIVERED'];
 
-export default function OrderDetailPage({ params }: { params: { id: string } }) {
+export default function OrderDetailPage() {
+  const params = useParams();
+  const id = params.id as string;
   const { toast } = useToast();
   const router = useRouter();
 
   const { data: order, isLoading, refetch } = useQuery({
-    queryKey: ['order', params.id],
-    queryFn: () => ordersApi.getById(params.id).then((r) => r.data),
+    queryKey: ['order', id],
+    queryFn: () => ordersApi.getById(id).then((r: any) => r.data),
   });
 
   const cancelOrder = async () => {
     try {
-      await ordersApi.cancel(params.id);
+      await ordersApi.cancel(id);
       toast({ title: 'Order cancelled' });
       refetch();
     } catch (err: any) {

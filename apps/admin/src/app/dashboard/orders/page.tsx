@@ -26,7 +26,7 @@ export default function AdminOrdersPage() {
     queryFn: () =>
       ordersApi
         .getAll({ page, limit: 15, status: statusFilter === 'ALL' ? undefined : statusFilter })
-        .then((r) => r.data),
+        .then((r: any) => r.data),
   });
 
   const orders = data?.orders || [];

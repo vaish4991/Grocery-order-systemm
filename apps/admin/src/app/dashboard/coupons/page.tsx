@@ -17,7 +17,7 @@ export default function AdminCouponsPage() {
 
   const { data: coupons, isLoading, refetch } = useQuery({
     queryKey: ['coupons'],
-    queryFn: () => couponsApi.getAll().then((r) => r.data),
+    queryFn: () => couponsApi.getAll().then((r: any) => r.data),
   });
 
   const handleSubmit = async (e: React.FormEvent) => {

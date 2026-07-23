@@ -6,10 +6,11 @@ export const metadata: Metadata = {
   description: 'Browse our full range of fresh groceries — vegetables, fruits, dairy, and more.',
 };
 
-export default function ProductsPage({
+export default async function ProductsPage({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | undefined };
+  searchParams: Promise<{ [key: string]: string | undefined }>;
 }) {
-  return <ProductsListing searchParams={searchParams} />;
+  const resolvedParams = await searchParams;
+  return <ProductsListing searchParams={resolvedParams} />;
 }

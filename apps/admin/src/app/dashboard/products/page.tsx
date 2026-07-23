@@ -21,12 +21,12 @@ export default function AdminProductsPage() {
 
   const { data: productsData, isLoading, refetch } = useQuery({
     queryKey: ['admin-products', search],
-    queryFn: () => productsApi.list({ search: search || undefined }).then((r) => r.data),
+    queryFn: () => productsApi.list({ search: search || undefined }).then((r: any) => r.data),
   });
 
   const { data: categories } = useQuery({
     queryKey: ['categories'],
-    queryFn: () => categoriesApi.getAll().then((r) => r.data),
+    queryFn: () => categoriesApi.getAll().then((r: any) => r.data),
   });
 
   const products = productsData?.products || [];

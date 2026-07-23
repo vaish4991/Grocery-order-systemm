@@ -9,7 +9,7 @@ import Link from 'next/link';
 export default function AdminDashboardPage() {
   const { data: statsData, isLoading } = useQuery({
     queryKey: ['admin-stats'],
-    queryFn: () => dashboardApi.getStats().then((r) => r.data),
+    queryFn: () => dashboardApi.getStats().then((r: any) => r.data),
   });
 
   const totalOrders = statsData?.totalOrders || 0;

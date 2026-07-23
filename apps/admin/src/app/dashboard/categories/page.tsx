@@ -13,7 +13,7 @@ export default function AdminCategoriesPage() {
 
   const { data: categories, isLoading, refetch } = useQuery({
     queryKey: ['categories'],
-    queryFn: () => categoriesApi.getAll().then((r) => r.data),
+    queryFn: () => categoriesApi.getAll().then((r: any) => r.data),
   });
 
   const handleOpenCreate = () => {

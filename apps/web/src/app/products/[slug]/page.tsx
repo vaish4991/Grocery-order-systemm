@@ -8,9 +8,11 @@ import { useCartStore } from '@/lib/store';
 import { formatPrice, getDiscountPercent } from '@/lib/utils';
 import { ShoppingCart, Star, ChevronLeft, ChevronRight, Minus, Plus, Truck, Shield } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
-import { notFound } from 'next/navigation';
+import { notFound, useParams } from 'next/navigation';
 
-export default function ProductDetailPage({ params }: { params: { slug: string } }) {
+export default function ProductDetailPage() {
+  const params = useParams();
+  const slug = params.slug as string;
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
   const [adding, setAdding] = useState(false);
@@ -18,8 +20,8 @@ export default function ProductDetailPage({ params }: { params: { slug: string }
   const { toast } = useToast();
 
   const { data: product, isLoading } = useQuery({
-    queryKey: ['product', params.slug],
-    queryFn: () => productsApi.getBySlug(params.slug).then((r) => r.data),
+    queryKey: ['product', slug],
+    queryFn: () => productsApi.getBySlug(slug).then((r: any) => r.data),
   });
 
   const { data: reviewsData } = useQuery({
