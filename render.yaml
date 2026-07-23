@@ -1,0 +1,80 @@
+services:
+  # 1. NestJS Backend API
+  - type: web
+    name: gos-api
+    env: node
+    region: singapore
+    plan: free
+    buildCommand: npm install && npm run build --filter=api
+    startCommand: npm run start --prefix apps/api
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: DB_HOST
+        fromDatabase:
+          name: gos-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: gos-db
+          property: port
+      - key: DB_USERNAME
+        fromDatabase:
+          name: gos-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: gos-db
+          property: password
+      - key: DB_NAME
+        fromDatabase:
+          name: gos-db
+          property: database
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+
+  # 2. Customer Web App (Next.js)
+  - type: web
+    name: gos-web
+    env: node
+    region: singapore
+    plan: free
+    buildCommand: npm install && npm run build --filter=web
+    startCommand: npm run start --prefix apps/web
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_API_URL
+        fromService:
+          type: web
+          name: gos-api
+          property: url
+
+  # 3. Admin Dashboard (Next.js)
+  - type: web
+    name: gos-admin
+    env: node
+    region: singapore
+    plan: free
+    buildCommand: npm install && npm run build --filter=admin
+    startCommand: npm run start --prefix apps/admin
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_API_URL
+        fromService:
+          type: web
+          name: gos-api
+          property: url
+
+databases:
+  # Managed PostgreSQL Database
+  - name: gos-db
+    databaseName: gos_db
+    user: gos_user
+    region: singapore
+    plan: free
