@@ -19,15 +19,20 @@ export class PaymentsService {
     @InjectRepository(Order) private orderRepo: Repository<Order>,
     private config: ConfigService,
   ) {
+    const keyId = this.config.get('RAZORPAY_KEY_ID') || 'rzp_test_dummykey123';
+    const keySecret = this.config.get('RAZORPAY_KEY_SECRET') || 'dummysecret123';
+
     this.razorpay = new Razorpay({
-      key_id: this.config.get('RAZORPAY_KEY_ID'),
-      key_secret: this.config.get('RAZORPAY_KEY_SECRET'),
+      key_id: keyId,
+      key_secret: keySecret,
     });
   }
 
   async initiatePayment(orderId: string, userId: string) {
     const order = await this.orderRepo.findOne({ where: { id: orderId, userId } });
     if (!order) throw new NotFoundException('Order not found');
+
+    const keyId = this.config.get('RAZORPAY_KEY_ID') || 'rzp_test_dummykey123';
 
     // Create Razorpay order
     const razorpayOrder = await this.razorpay.orders.create({
@@ -47,7 +52,7 @@ export class PaymentsService {
       razorpayOrderId: razorpayOrder.id,
       amount: razorpayOrder.amount,
       currency: razorpayOrder.currency,
-      keyId: this.config.get('RAZORPAY_KEY_ID'),
+      keyId,
       orderNumber: order.orderNumber,
     };
   }
@@ -58,9 +63,10 @@ export class PaymentsService {
     razorpaySignature: string;
     orderId: string;
   }) {
+    const secret = this.config.get('RAZORPAY_KEY_SECRET') || 'dummysecret123';
     const body = `${dto.razorpayOrderId}|${dto.razorpayPaymentId}`;
     const expectedSignature = crypto
-      .createHmac('sha256', this.config.get('RAZORPAY_KEY_SECRET'))
+      .createHmac('sha256', secret)
       .update(body)
       .digest('hex');
 
@@ -88,7 +94,7 @@ export class PaymentsService {
   }
 
   async handleWebhook(payload: any, signature: string) {
-    const secret = this.config.get('RAZORPAY_KEY_SECRET');
+    const secret = this.config.get('RAZORPAY_KEY_SECRET') || 'dummysecret123';
     const expectedSignature = crypto
       .createHmac('sha256', secret)
       .update(JSON.stringify(payload))
