@@ -52,7 +52,7 @@ services:
         fromService:
           type: web
           name: gos-api
-          property: url
+          property: host
 
   # 3. Admin Dashboard (Next.js)
   - type: web
@@ -69,7 +69,7 @@ services:
         fromService:
           type: web
           name: gos-api
-          property: url
+          property: host
 
 databases:
   # Managed PostgreSQL Database
