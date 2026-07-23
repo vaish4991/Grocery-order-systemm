@@ -7,15 +7,17 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "turbo dev",
-    "build": "turbo build",
-    "lint": "turbo lint",
+    "dev": "npx turbo dev",
+    "build": "npx turbo build",
+    "lint": "npx turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
-    "db:migrate": "turbo db:migrate",
-    "db:seed": "turbo db:seed"
+    "db:migrate": "npx turbo db:migrate",
+    "db:seed": "npx turbo db:seed"
+  },
+  "dependencies": {
+    "turbo": "^2.3.3"
   },
   "devDependencies": {
-    "turbo": "^2.3.3",
     "prettier": "^3.4.2",
     "typescript": "^5.7.2"
   },
